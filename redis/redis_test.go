@@ -1,23 +1,29 @@
 package redis
 
 import (
+	"context"
 	"github.com/go-redis/redis/v9"
 	"reflect"
 	"testing"
+	"time"
 )
 
-func TestRedisClient(t *testing.T) {
+func TestClient(t *testing.T) {
 	tests := []struct {
 		name string
 		want *redis.Client
 	}{
-		// TODO: Add test cases.
+		{"client", Client()},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := RedisClient(); !reflect.DeepEqual(got, tt.want) {
+			got := Client()
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("RedisClient() = %v, want %v", got, tt.want)
 			}
+			got.Set(context.Background(), "lifeng", "ng-life", 1*time.Minute)
+			result, _ := got.Get(context.Background(), "lifeng").Result()
+			println(result)
 		})
 	}
 }
